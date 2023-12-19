@@ -11,18 +11,6 @@ import java.util.List;
 public interface ItemRepository extends ElasticsearchRepository<ItemElastic, Integer> {
 
 
-    @Query("{\n" +
-            "    \"multi_match\": {\n" +
-            "      \"fields\":  [ \"type^2\", \"name^2\", \"description\"],\n" +
-            "      \"operator\":   \"AND\",\n" +
-            "        \"query\" : \"?0\",\n" +
-            "      \"fuzziness\" :1, \n" +
-            "        \"boost\": \"1\",\n" +
-            "       \"analyzer\" : \"russian\"\n" +
-            "      }\n" +
-            "    }\n")
-    List<ItemElastic> find(String name, Pageable pageable);
-
     @Query("{\"match\": {\n" +
             "      \"type\": {\n" +
             "        \"query\": \"?0\",\n" +
@@ -39,6 +27,35 @@ public interface ItemRepository extends ElasticsearchRepository<ItemElastic, Int
             "      }\n" +
             "    }}")
     List<ItemElastic> findAllByBrand(String name, Pageable pageable);
+
+    @Query("{\"match\": {\n" +
+            "      \"fulltext\": {\n" +
+            "        \"query\": \"?0\",\n" +
+            "        \"fuzziness\": \"2\"\n" +
+            "      }\n" +
+            "    }}")
+    List<ItemElastic> findAllFulltextNotStrong(String text, Pageable pageable);
+
+    @Query("{\"match\": {\n" +
+            "      \"catalogue\": {\n" +
+            "        \"query\": \"?0\",\n" +
+            "        \"fuzziness\": \"1\",\n" +
+            "        \"boost\": \"1\"\n" +
+            "      }\n" +
+            "    }}")
+    List<ItemElastic> findByCatalogue(String text, Pageable pageable);
+
+    @Query("{\n" +
+            "    \"multi_match\": {\n" +
+            "      \"fields\":  [ \"type^2\", \"name^2\", \"description\"],\n" +
+            "      \"operator\":   \"AND\",\n" +
+            "        \"query\" : \"?0\",\n" +
+            "      \"fuzziness\" :1, \n" +
+            "        \"boost\": \"1\",\n" +
+            "       \"analyzer\" : \"russian\"\n" +
+            "      }\n" +
+            "    }\n")
+    List<ItemElastic> findByCatalogueAndTypeAndDescriptionStrong(String name, Pageable pageable);
 
     @Query("{\n" +
             "\"bool\": { \n" +
@@ -62,24 +79,8 @@ public interface ItemRepository extends ElasticsearchRepository<ItemElastic, Int
             "      \n" +
             "    }\n" +
             "}")
-    List<ItemElastic> findAllByBrand(String text, String brand, Pageable pageable);
+    List<ItemElastic> findByBrandAndNameDescriptionType(String text, String brand, Pageable pageable);
 
-@Query("{\"match\": {\n" +
-        "      \"fulltext\": {\n" +
-        "        \"query\": \"?0\",\n" +
-        "        \"fuzziness\": \"2\"\n" +
-        "      }\n" +
-        "    }}")
-    List<ItemElastic> findAllNotStrong(String text, Pageable pageable);
-
-    @Query("{\"match\": {\n" +
-            "      \"catalogue\": {\n" +
-            "        \"query\": \"?0\",\n" +
-            "        \"fuzziness\": \"1\",\n" +
-            "        \"boost\": \"1\"\n" +
-            "      }\n" +
-            "    }}")
-    List<ItemElastic> findByCatalogue(String text, Pageable pageable);
 
     @Query("{\n" +
             "\"bool\": { \n" +
@@ -102,8 +103,8 @@ public interface ItemRepository extends ElasticsearchRepository<ItemElastic, Int
             "                    }]\n" +
             "    }\n" +
             "}")
+    List<ItemElastic> findByTypeAndNameDescriptionType(String text, String type, Pageable pageable);
 
-    List<ItemElastic> findAllByType(String text, String type, Pageable pageable);
     @Query("{\n" +
             "\"bool\": { \n" +
             "      \"must\": [\n" +
@@ -125,7 +126,7 @@ public interface ItemRepository extends ElasticsearchRepository<ItemElastic, Int
             "                    }]\n" +
             "    }\n" +
             "}")
-    List<ItemElastic> findAllByTypeAndBrand(String text, String brand, String type, Pageable pageable);
+    List<ItemElastic> findAllByTypeAndBrand(String text, String brand, Pageable pageable);
 
     @Query("{\n" +
             "\"bool\": { \n" +
@@ -144,7 +145,8 @@ public interface ItemRepository extends ElasticsearchRepository<ItemElastic, Int
             "                    }]\n" +
             "    }\n" +
             "}")
-    List<ItemElastic> find(String text, Long catalogueId, Pageable pageable);
+    List<ItemElastic> findAllByCatalogueAndType(String text, Long catalogueId, Pageable pageable);
+
     @Query("{\n" +
             "\"bool\": { \n" +
             "      \"must\": [\n" +
@@ -164,13 +166,18 @@ public interface ItemRepository extends ElasticsearchRepository<ItemElastic, Int
             "                    }]\n" +
             "    }\n" +
             "}")
-    List<ItemElastic> find(String text, Long catalogueId, String type, Pageable pageable);
+    List<ItemElastic> findByCatalogueAndTypeStrong(String text, Long catalogueId, String type, Pageable pageable);
+
+
     @Query("{\"term\": {\n" +
             "      \"item_id\":  \"?0\"\n" +
             "    }}")
-    List<ItemElastic> findByItemId(String itemId, PageRequest of);
+    List<ItemElastic> findAllByItemId(String itemId, PageRequest pageRequest);
+
 
     @Query("{\"regexp\": {\n" +
             "      \"name\": \"?0\" }}")
     List<ItemElastic> findAllByName(String name, Pageable pageable);
+
+
 }

@@ -8,18 +8,28 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
+@Entity(name = "item")
+@Table
 @NoArgsConstructor
 @Getter
 @Setter
 public class ItemEntity {
-    private String name;
-    private String brand;
-    private String catalogue;
-    private String type;
-    private String description;
-    private long brandId;
-    private long catalogueId;
+
     @Id
     private long itemId;
+
+    private String name;
+
+    private String brand;
+
+    private String catalogue;
+
+    private String type;
+
+    private String description;
+
+    private long brandId;
+
+    private long catalogueId;
+
 }
