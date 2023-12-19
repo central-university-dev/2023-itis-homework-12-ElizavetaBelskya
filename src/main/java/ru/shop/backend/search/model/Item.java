@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.math.BigInteger;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,5 +25,15 @@ public class Item {
     @Id
     @Column
     private Integer itemId;
+
     private String cat;
+
+    public Item(Object[] arr) {
+        this.price = ((BigInteger) arr[2]).intValue();
+        this.name = arr[1].toString();
+        this.url = arr[3].toString();
+        this.image = arr[4].toString();
+        this.itemId = ((BigInteger) arr[0]).intValue();
+        this.cat = arr[5].toString();
+    }
 }

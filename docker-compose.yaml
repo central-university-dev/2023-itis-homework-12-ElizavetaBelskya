@@ -1,0 +1,36 @@
+version: '3.3'
+
+services:
+  database:
+    image:
+      postgres:10-alpine
+    ports:
+      - "5431:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=site
+    volumes:
+      - new_postgres_volume:/var/lib/postgresql/data
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    hostname: 127.0.0.1
+    environment:
+      - cluster.name=elasticsearch
+      - "discovery.type=single-node"
+      - xpack.security.enabled=true
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=123456
+    volumes:
+      - elastic_volume:/usr/share/elasticsearch/data
+
+volumes:
+  new_postgres_volume:
+    external: true
+  elastic_volume:
+    external: true
+

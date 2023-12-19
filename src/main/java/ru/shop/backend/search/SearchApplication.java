@@ -12,6 +12,6 @@ import java.util.concurrent.TimeUnit;
 @SpringBootApplication
 public class SearchApplication {
     public static void main(String[] args) {
-        ConfigurableApplicationContext cont = SpringApplication.run(SearchApplication.class, args);
+        SpringApplication.run(SearchApplication.class, args);
     }
 }

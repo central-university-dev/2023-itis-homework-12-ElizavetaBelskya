@@ -1,4 +1,4 @@
-package ru.shop.backend.search.model;
+package ru.shop.backend.search.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,8 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Getter
-public class SearchResultElastic {
-    public List<CatalogueElastic> result;
+public class SearchResultElasticDto {
+
+    public List<CatalogueElasticDto> result;
+
 }
